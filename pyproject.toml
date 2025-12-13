@@ -7,7 +7,7 @@ name = "gade"
 version = "0.1.0"
 description = "Gradient-Aware Development Environment - Allocate AI compute dynamically based on code difficulty"
 readme = "README.md"
-license = "MIT"
+license = {text = "MIT"}
 requires-python = ">=3.11"
 authors = [
     { name = "GADE Team" }

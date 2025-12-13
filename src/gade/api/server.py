@@ -270,9 +270,15 @@ if HAS_FASTAPI:
 def run_server(host: str = "0.0.0.0", port: int = 8000):
     """Run the API server."""
     check_fastapi()
+    import os
     import uvicorn
+    # Railway sets PORT env variable
+    port = int(os.environ.get("PORT", port))
+    print(f"Starting GADE API server on {host}:{port}")
+    print(f"Docs: http://{host}:{port}/docs")
     uvicorn.run(app, host=host, port=port)
 
 
 if __name__ == "__main__":
     run_server()
+
