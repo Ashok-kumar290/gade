@@ -1,6 +1,7 @@
 # GADE - Gradient-Aware Development Environment
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI](https://img.shields.io/pypi/v/gade.svg)](https://pypi.org/project/gade/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 **Allocate AI compute dynamically based on code difficulty.**
@@ -17,10 +18,19 @@ gade analyze ./my-project --top 20
 
 # View heatmap
 gade heatmap ./my-project
-
-# Start API server
-gade serve --port 8000
 ```
+
+## Cloud API
+
+Use the hosted API — no setup required:
+
+```bash
+curl -X POST "https://web-production-8b5ca.up.railway.app/analyze" \
+  -H "Content-Type: application/json" \
+  -d '{"repo_path": "./my-project", "top_k": 10}'
+```
+
+📖 **API Docs:** [web-production-8b5ca.up.railway.app/docs](https://web-production-8b5ca.up.railway.app/docs)
 
 ## Features
 
@@ -28,32 +38,22 @@ gade serve --port 8000
 - **80/20 Allocation**: Smart token distribution by difficulty
 - **Multi-LLM Support**: OpenAI, Anthropic, Google, Ollama, Azure, Bedrock
 - **Agentic AI Ready**: MCP server, OpenAI tools, LangChain integration
-- **REST API**: FastAPI endpoints at `/analyze`, `/score`, `/regions`
+- **REST API**: Hosted cloud API or self-host with `gade serve`
 
 ## Installation
 
 ```bash
-# Core
 pip install gade
-
-# With all integrations
-pip install gade[all]
-
-# Specific features
-pip install gade[llm]        # LLM support
-pip install gade[api]        # REST API
-pip install gade[mcp]        # Claude Desktop
-pip install gade[langchain]  # LangChain tools
 ```
 
 ## Python SDK
 
 ```python
-from gade import analyze, get_difficulty
+from gade import analyze
 
 result = analyze("./my-project")
 for node in result.get_top_k(10):
-    print(f"{node.name}: {node.difficulty_score:.2f}")
+    print(f"{node.node_name}: {node.difficulty_score:.2f}")
 ```
 
 ## CLI Commands
@@ -63,8 +63,6 @@ for node in result.get_top_k(10):
 | `gade analyze <path>` | Rank code by difficulty |
 | `gade heatmap <path>` | Terminal visualization |
 | `gade refactor <path>` | AI-assisted refactoring |
-| `gade serve` | Start REST API |
-| `gade serve-mcp` | Start MCP server |
 
 ## Difficulty Tiers
 
