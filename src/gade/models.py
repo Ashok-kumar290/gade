@@ -128,19 +128,31 @@ class DifficultyNode(BaseModel):
         """
         Return the AI strategy tier based on difficulty score.
         
-        - D < 0.2: compress (summarize)
-        - 0.2 <= D < 0.5: standard (single-pass)
+        - D < 0.2: shallow (summarize)
+        - 0.2 <= D < 0.5: medium (single-pass)
         - 0.5 <= D < 0.8: deep (multi-step + tools)
-        - D >= 0.8: debate (multi-pass synthesis)
+        - D >= 0.8: critical (multi-pass synthesis)
         """
         if self.difficulty_score < 0.2:
-            return "compress"
+            return "shallow"
         elif self.difficulty_score < 0.5:
-            return "standard"
+            return "medium"
         elif self.difficulty_score < 0.8:
             return "deep"
         else:
-            return "debate"
+            return "critical"
+            
+    def get_compute_budget(self) -> int:
+        """Return token budget based on tier."""
+        tier = self.difficulty_tier
+        if tier == "shallow":
+            return 500
+        elif tier == "medium":
+            return 2000
+        elif tier == "deep":
+            return 6000
+        else:  # critical
+            return 12000
     
     @classmethod
     def generate_id(cls, file_path: Path, ast_range: tuple[int, int]) -> str:

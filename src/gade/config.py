@@ -77,15 +77,16 @@ class AllocationConfig(BaseModel):
     """Token allocation strategy configuration."""
     
     # Tier thresholds
-    compress_threshold: float = Field(default=0.2)
-    standard_threshold: float = Field(default=0.5)
+    # Tier thresholds
+    shallow_threshold: float = Field(default=0.2)
+    medium_threshold: float = Field(default=0.5)
     deep_threshold: float = Field(default=0.8)
     
     # Token percentages per tier
-    compress_tokens_pct: float = Field(default=0.05)
-    standard_tokens_pct: float = Field(default=0.15)
+    shallow_tokens_pct: float = Field(default=0.05)
+    medium_tokens_pct: float = Field(default=0.15)
     deep_tokens_pct: float = Field(default=0.30)
-    debate_tokens_pct: float = Field(default=0.50)
+    critical_tokens_pct: float = Field(default=0.50)
 
 
 class GADEConfig(BaseModel):
