@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gade"
-version = "0.2.1"
+version = "0.2.2"
 description = "Gradient-Aware Development Environment - Allocate AI compute dynamically based on code difficulty"
 readme = "README.md"
 license = {text = "MIT"}

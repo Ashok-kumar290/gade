@@ -20,7 +20,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __author__ = "GADE Team"
 
 # Lazy imports for performance

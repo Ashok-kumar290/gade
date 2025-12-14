@@ -137,12 +137,12 @@ def render_summary_table(result: AnalysisResult, console: Console) -> None:
     table.add_column("% of Total")
     table.add_column("Avg Score")
     
-    tiers = ["compress", "standard", "deep", "debate"]
+    tiers = ["shallow", "medium", "deep", "critical"]
     tier_colors = {
-        "compress": "green",
-        "standard": "yellow",
+        "shallow": "green",
+        "medium": "yellow",
         "deep": "orange1",
-        "debate": "red",
+        "critical": "red",
     }
     
     total = len(result.nodes)
