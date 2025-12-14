@@ -96,7 +96,7 @@ if HAS_FASTAPI:
 app = FastAPI(
     title="GADE API",
     description="Gradient-Aware Development Environment - REST API",
-    version="1.0.0",
+    version="0.2.1",
     docs_url="/docs",
     redoc_url="/redoc",
 ) if HAS_FASTAPI else None
