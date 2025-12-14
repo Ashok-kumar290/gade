@@ -428,6 +428,41 @@ def memory(path: str, show: bool, clear: bool) -> None:
         ))
 
 
+@main.command()
+@click.argument("path", type=click.Path(exists=True), default=".")
+@click.option("--top", "-k", type=int, default=10, help="Number of regions to benchmark")
+@click.option("--output", "-o", type=click.Path(), help="Save results to JSON file")
+def benchmark(path: str, top: int, output: str) -> None:
+    """Run benchmark comparing baseline vs GADE allocation.
+    
+    Example:
+        gade benchmark ./src --top 10
+        gade benchmark ./src -o results.json
+    """
+    from gade.benchmark import BenchmarkHarness
+    
+    repo_path = Path(path).resolve()
+    
+    console.print(Panel(
+        f"[bold]Benchmarking: {repo_path.name}[/bold]\n"
+        f"Regions: {top}",
+        title="GADE Benchmark",
+        border_style="cyan"
+    ))
+    
+    harness = BenchmarkHarness(repo_path)
+    result = harness.run_benchmark(top_k=top)
+    
+    # Print report
+    console.print(harness.print_report(result))
+    
+    # Save if requested
+    if output:
+        harness.save_results(Path(output))
+        console.print(f"\n[green]Results saved to {output}[/green]")
+
+
 if __name__ == "__main__":
     main()
+
 
