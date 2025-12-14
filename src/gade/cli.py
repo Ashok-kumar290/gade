@@ -375,7 +375,7 @@ def improve(path: str, top: int, budget: int, dry_run: bool) -> None:
     
     for r in results:
         delta_color = "green" if r.delta < 0 else "red" if r.delta > 0 else "dim"
-        status = "✅" if r.improved else "⏸️" if r.error else "➖"
+        status = "[OK]" if r.improved else "[SKIP]" if r.error else "[-]"
         table.add_row(
             r.region_name,
             f"{r.original_score:.3f}",
@@ -406,7 +406,7 @@ def memory(path: str, show: bool, clear: bool) -> None:
     
     if clear:
         mem.clear()
-        console.print(f"[green]✓ Cleared difficulty memory for {repo_path.name}[/green]")
+        console.print(f"[green]Cleared difficulty memory for {repo_path.name}[/green]")
         return
     
     if show:
@@ -419,10 +419,10 @@ def memory(path: str, show: bool, clear: bool) -> None:
         
         console.print(Panel(
             f"[bold]Difficulty Memory: {repo_path.name}[/bold]\n\n"
-            f"📊 Total regions: {stats['total_regions']}\n"
-            f"📈 Average difficulty: {stats['avg_difficulty']:.3f}\n"
-            f"🔺 Max difficulty: {stats['max_difficulty']:.3f}\n"
-            f"🔻 Min difficulty: {stats['min_difficulty']:.3f}",
+            f"Total regions: {stats['total_regions']}\n"
+            f"Average difficulty: {stats['avg_difficulty']:.3f}\n"
+            f"Max difficulty: {stats['max_difficulty']:.3f}\n"
+            f"Min difficulty: {stats['min_difficulty']:.3f}",
             title="Memory Stats",
             border_style="blue"
         ))

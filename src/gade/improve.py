@@ -61,7 +61,7 @@ def improve_repository(
     memory.load()
     
     # Initial analysis
-    print(f"📊 Analyzing {repo_path.name}...")
+    print(f"[ANALYZE] Analyzing {repo_path.name}...")
     initial_result = analyze_repository(repo_path, config)
     top_regions = initial_result.get_top_k(top_k)
     
@@ -69,14 +69,14 @@ def improve_repository(
         print("No regions to improve.")
         return []
     
-    print(f"\n🎯 Target regions ({top_k} hardest):")
+    print(f"\n[TARGET] Top {top_k} hardest regions:")
     for i, region in enumerate(top_regions, 1):
         print(f"  {i}. {region.node_name} ({region.file_path.name}) - {region.difficulty_score:.3f}")
     
     results = []
     
     for region in top_regions:
-        print(f"\n🔧 Processing: {region.node_name}")
+        print(f"\n[PROCESS] {region.node_name}")
         
         # Store original score in memory
         memory.update(
@@ -98,7 +98,7 @@ def improve_repository(
                 tokens_used=0,
                 error="Dry run - no changes made"
             )
-            print(f"  ⏸️  [DRY RUN] Would refactor with {budget} tokens")
+            print(f"  [DRY RUN] Would refactor with {budget} tokens")
         else:
             # Actually refactor using LLM
             try:
@@ -124,9 +124,9 @@ def improve_repository(
                 )
                 
                 if delta < 0:
-                    print(f"  ✅ Improved: {region.difficulty_score:.3f} → {new_score:.3f} (Δ{delta:+.3f})")
+                    print(f"  [OK] Improved: {region.difficulty_score:.3f} -> {new_score:.3f} (delta: {delta:+.3f})")
                 else:
-                    print(f"  ⚠️  No improvement: {region.difficulty_score:.3f} → {new_score:.3f}")
+                    print(f"  [WARN] No improvement: {region.difficulty_score:.3f} -> {new_score:.3f}")
                     
             except Exception as e:
                 result = ImprovementResult(
@@ -139,7 +139,7 @@ def improve_repository(
                     tokens_used=0,
                     error=str(e)
                 )
-                print(f"  ❌ Error: {e}")
+                print(f"  [ERROR] {e}")
         
         results.append(result)
     
@@ -150,7 +150,7 @@ def improve_repository(
     improved = sum(1 for r in results if r.improved)
     total_delta = sum(r.delta for r in results)
     
-    print(f"\n📈 Summary:")
+    print(f"\n[SUMMARY]")
     print(f"  Regions processed: {len(results)}")
     print(f"  Improved: {improved}/{len(results)}")
     print(f"  Total Δ difficulty: {total_delta:+.3f}")
