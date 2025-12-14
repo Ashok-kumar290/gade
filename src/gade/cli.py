@@ -331,5 +331,103 @@ def serve_mcp() -> None:
         console.print("Install with: pip install gade[mcp]")
 
 
+@main.command()
+@click.argument("path", type=click.Path(exists=True), default=".")
+@click.option("--top", "-k", type=int, default=3, help="Number of regions to improve")
+@click.option("--budget", "-b", type=int, default=4000, help="Token budget per region")
+@click.option("--dry-run/--no-dry-run", default=True, help="Preview without changes")
+def improve(path: str, top: int, budget: int, dry_run: bool) -> None:
+    """Improve top-K hardest regions using LLM refactoring.
+    
+    Example:
+        gade improve ./src --top 3 --budget 4000
+        gade improve ./src --top 5 --no-dry-run
+    """
+    from gade.improve import improve_repository
+    
+    repo_path = Path(path).resolve()
+    
+    console.print(Panel(
+        f"[bold]Improving: {repo_path.name}[/bold]\n"
+        f"Top {top} regions | Budget: {budget} tokens | Dry run: {dry_run}",
+        title="GADE Improve",
+        border_style="cyan"
+    ))
+    
+    results = improve_repository(
+        repo_path,
+        top_k=top,
+        budget=budget,
+        dry_run=dry_run
+    )
+    
+    if not results:
+        console.print("[yellow]No regions found to improve.[/yellow]")
+        return
+    
+    # Show results table
+    table = Table(title="Improvement Results")
+    table.add_column("Region", style="cyan")
+    table.add_column("Original", justify="right")
+    table.add_column("New", justify="right")
+    table.add_column("Delta", justify="right")
+    table.add_column("Status")
+    
+    for r in results:
+        delta_color = "green" if r.delta < 0 else "red" if r.delta > 0 else "dim"
+        status = "✅" if r.improved else "⏸️" if r.error else "➖"
+        table.add_row(
+            r.region_name,
+            f"{r.original_score:.3f}",
+            f"{r.new_score:.3f}",
+            f"[{delta_color}]{r.delta:+.3f}[/{delta_color}]",
+            status
+        )
+    
+    console.print(table)
+
+
+@main.command()
+@click.argument("path", type=click.Path(exists=True), default=".")
+@click.option("--show/--no-show", default=True, help="Show memory stats")
+@click.option("--clear", is_flag=True, help="Clear stored memory")
+def memory(path: str, show: bool, clear: bool) -> None:
+    """Manage persistent difficulty memory.
+    
+    Example:
+        gade memory ./src           # Show stats
+        gade memory ./src --clear   # Clear memory
+    """
+    from gade.memory import DifficultyMemory
+    
+    repo_path = Path(path).resolve()
+    mem = DifficultyMemory(repo_path)
+    mem.load()
+    
+    if clear:
+        mem.clear()
+        console.print(f"[green]✓ Cleared difficulty memory for {repo_path.name}[/green]")
+        return
+    
+    if show:
+        stats = mem.get_stats()
+        
+        if stats["total_regions"] == 0:
+            console.print(f"[yellow]No difficulty memory stored for {repo_path.name}[/yellow]")
+            console.print("[dim]Run 'gade analyze' or 'gade improve' to build memory.[/dim]")
+            return
+        
+        console.print(Panel(
+            f"[bold]Difficulty Memory: {repo_path.name}[/bold]\n\n"
+            f"📊 Total regions: {stats['total_regions']}\n"
+            f"📈 Average difficulty: {stats['avg_difficulty']:.3f}\n"
+            f"🔺 Max difficulty: {stats['max_difficulty']:.3f}\n"
+            f"🔻 Min difficulty: {stats['min_difficulty']:.3f}",
+            title="Memory Stats",
+            border_style="blue"
+        ))
+
+
 if __name__ == "__main__":
     main()
+
