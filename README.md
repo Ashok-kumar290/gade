@@ -13,12 +13,14 @@ GADE measures difficulty across your codebase and focuses 80% of tokens on the 2
 ```bash
 pip install gade
 
-# Analyze a repository
-gade analyze ./my-project --top 20
+# Analyze a repository (works on all systems)
+python -m gade analyze ./my-project --top 20
 
 # View heatmap
-gade heatmap ./my-project
+python -m gade heatmap ./my-project
 ```
+
+> **Windows Users:** If `gade` command doesn't work, use `python -m gade` instead. This is the recommended universal approach.
 
 ## Cloud API
 
@@ -38,7 +40,7 @@ curl -X POST "https://web-production-8b5ca.up.railway.app/analyze" \
 - **80/20 Allocation**: Smart token distribution by difficulty
 - **Multi-LLM Support**: OpenAI, Anthropic, Google, Ollama, Azure, Bedrock
 - **Agentic AI Ready**: MCP server, OpenAI tools, LangChain integration
-- **REST API**: Hosted cloud API or self-host with `gade serve`
+- **REST API**: Hosted cloud API or self-host
 
 ## Installation
 
@@ -60,9 +62,9 @@ for node in result.get_top_k(10):
 
 | Command | Description |
 |---------|-------------|
-| `gade analyze <path>` | Rank code by difficulty |
-| `gade heatmap <path>` | Terminal visualization |
-| `gade refactor <path>` | AI-assisted refactoring |
+| `python -m gade analyze <path>` | Rank code by difficulty |
+| `python -m gade heatmap <path>` | Terminal visualization |
+| `python -m gade refactor <path>` | AI-assisted refactoring |
 
 ## Difficulty Tiers
 
